@@ -1,0 +1,16 @@
+{
+  "name": "trinetra",
+  "version": "1.0.0",
+  "description": "Trinetra: B2B wholesale marketplace with tier pricing and credit-based buying (DBMS project)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "mysql2": "^3.11.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

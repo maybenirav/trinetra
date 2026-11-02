@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trinetra | Wholesale buying, clearly seen</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2C25 9.5 25 22.5 16 30C7 22.5 7 9.5 16 2Z' fill='%23E2A33A'/%3E%3Ccircle cx='16' cy='16' r='4.5' fill='%2315203B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ------------------------------------------------------------------
+   Design tokens
+   ink: night navy, kumkum: vermilion accent, haldi: turmeric highlight
+------------------------------------------------------------------ */
+:root {
+  --ink: #15203B;
+  --ink-2: #22305A;
+  --kumkum: #B3261E;
+  --kumkum-dark: #8E1D17;
+  --haldi: #E2A33A;
+  --haldi-soft: #FBF0DC;
+  --canvas: #F2F4F8;
+  --surface: #FFFFFF;
+  --text: #1B2133;
+  --muted: #5F6880;
+  --line: #E0E4EC;
+  --ok: #2E7D5B;
+  --ok-soft: #E3F2EA;
+  --warn: #9A6412;
+  --warn-soft: #FCF1DD;
+  --bad: #B3261E;
+  --bad-soft: #FBE7E5;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius-lg: 14px;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--canvas);
+  font-variant-numeric: tabular-nums;
+}
+h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.2; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--haldi); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* ------------------------------------------------------------------
+   Layout: sidebar + main
+------------------------------------------------------------------ */
+.app { display: grid; grid-template-columns: 236px 1fr; min-height: 100vh; }
+.sidebar {
+  background: var(--ink);
+  color: #DCE2F2;
+  display: flex; flex-direction: column;
+  padding: 22px 14px;
+  position: sticky; top: 0; height: 100vh;
+}
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 8px 22px; }
+.brand svg { width: 34px; height: 34px; flex: none; }
+.brand-name { font-family: var(--display); font-weight: 700; font-size: 23px; color: #fff; letter-spacing: -0.01em; }
+.brand-tag { font-size: 12px; color: #9AA6C6; margin-top: -2px; }
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: var(--radius-sm);
+  color: #C4CCE2; text-decoration: none; font-weight: 500;
+}
+.nav a svg { width: 18px; height: 18px; opacity: .8; }
+.nav a:hover { background: var(--ink-2); color: #fff; }
+.nav a[aria-current="page"] { background: var(--ink-2); color: #fff; box-shadow: inset 3px 0 0 var(--haldi); }
+.sidebar-foot { margin-top: auto; font-size: 12px; color: #8F9BBC; padding: 12px 8px 0; border-top: 1px solid var(--ink-2); }
+.conn { display: flex; align-items: center; gap: 8px; }
+.conn-dot { width: 8px; height: 8px; border-radius: 50%; background: #8F9BBC; flex: none; }
+.conn.ok .conn-dot { background: #4CC38A; }
+.conn.bad .conn-dot { background: #F26B5B; }
+
+.main { min-width: 0; display: flex; flex-direction: column; }
+.topbar {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 16px 32px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 20;
+}
+.topbar h1 { font-size: 24px; font-weight: 700; margin-right: auto; }
+.buyer-box { display: flex; align-items: center; gap: 10px; }
+.buyer-box label { font-size: 13px; color: var(--muted); }
+.buyer-box select {
+  padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); min-width: 210px;
+}
+.credit-pill { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.credit-pill strong { color: var(--text); font-weight: 600; }
+.content { padding: 28px 32px 60px; max-width: 1360px; width: 100%; }
+
+/* ------------------------------------------------------------------
+   Buttons, chips, inputs
+------------------------------------------------------------------ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 16px; border-radius: var(--radius-sm);
+  border: 1px solid var(--line); background: var(--surface);
+  font-weight: 600; font-size: 14px; cursor: pointer;
+}
+.btn:hover { border-color: #C6CCD9; background: #F8F9FB; }
+.btn.primary { background: var(--kumkum); border-color: var(--kumkum); color: #fff; }
+.btn.primary:hover { background: var(--kumkum-dark); border-color: var(--kumkum-dark); }
+.btn.dark { background: var(--ink); border-color: var(--ink); color: #fff; }
+.btn.dark:hover { background: var(--ink-2); }
+.btn.ghost-bad { color: var(--bad); }
+.btn.small { padding: 6px 11px; font-size: 13px; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn svg { width: 17px; height: 17px; }
+.cart-btn { position: relative; }
+.cart-count {
+  background: var(--haldi); color: var(--ink); font-size: 12px; font-weight: 700;
+  min-width: 20px; height: 20px; border-radius: 10px; display: inline-grid; place-items: center; padding: 0 5px;
+}
+
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  padding: 6px 13px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface); font-size: 13px; font-weight: 500; cursor: pointer;
+}
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+.field { display: flex; flex-direction: column; gap: 5px; font-size: 13px; color: var(--muted); }
+.field input, .field select, .search {
+  padding: 9px 11px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text); font-size: 14px;
+}
+.search { min-width: 240px; }
+
+.toolbar { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+.toolbar .spacer { flex: 1; }
+
+/* ------------------------------------------------------------------
+   Panels and tables
+------------------------------------------------------------------ */
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 20px 22px; }
+.panel > header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.panel h2 { font-size: 17px; font-weight: 700; }
+.panel header p { margin: 0; font-size: 13px; color: var(--muted); }
+.grid { display: grid; gap: 18px; grid-template-columns: repeat(12, 1fr); }
+.span-8 { grid-column: span 8; } .span-4 { grid-column: span 4; }
+.span-6 { grid-column: span 6; } .span-12 { grid-column: span 12; }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-size: 12.5px; font-weight: 600; color: var(--muted); background: #F8F9FB; }
+tbody tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: #FAFBFD; }
+.sub { display: block; font-size: 12.5px; color: var(--muted); }
+
+.badge { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12.5px; font-weight: 600; }
+.b-approved { background: #E6ECFA; color: #2B4AA0; }
+.b-fulfilled { background: var(--ok-soft); color: var(--ok); }
+.b-cancelled { background: #ECEEF2; color: #5F6880; }
+.b-paid { background: var(--ok-soft); color: var(--ok); }
+.b-partial { background: var(--warn-soft); color: var(--warn); }
+.b-unpaid { background: var(--bad-soft); color: var(--bad); }
+.b-na { background: #ECEEF2; color: #5F6880; }
+
+.meter { height: 8px; background: #ECEEF3; border-radius: 4px; overflow: hidden; min-width: 120px; }
+.meter > span { display: block; height: 100%; background: var(--ink); border-radius: 4px; }
+.meter.hot > span { background: var(--kumkum); }
+.meter.mid > span { background: var(--haldi); }
+
+/* ------------------------------------------------------------------
+   Overview
+------------------------------------------------------------------ */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 18px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 18px 20px; }
+.kpi .k-label { font-size: 13.5px; color: var(--muted); font-weight: 500; }
+.kpi .k-value { font-family: var(--display); font-size: 30px; font-weight: 700; margin: 4px 0 2px; }
+.kpi .k-note { font-size: 12.5px; color: var(--muted); }
+.kpi.accent { background: var(--ink); border-color: var(--ink); color: #fff; }
+.kpi.accent .k-label, .kpi.accent .k-note { color: #AEB8D4; }
+.kpi.accent .k-value { color: var(--haldi); }
+
+.chart { width: 100%; height: auto; display: block; }
+.chart .bar { fill: var(--ink); }
+.chart .bar.last { fill: var(--kumkum); }
+.chart .bar-val { font-size: 12px; fill: var(--text); text-anchor: middle; font-weight: 600; }
+.chart .bar-label { font-size: 12px; fill: var(--muted); text-anchor: middle; }
+.chart .axis { stroke: var(--line); }
+
+.rank { list-style: none; margin: 0; padding: 0; }
+.rank li { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.rank li:last-child { border-bottom: 0; }
+.rank .pos { font-family: var(--display); font-weight: 700; color: var(--muted); }
+.rank li:first-child .pos { color: var(--kumkum); }
+.hbar { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; margin-bottom: 12px; font-size: 14px; }
+.hbar .meter { grid-column: span 2; }
+
+.list-plain { list-style: none; margin: 0; padding: 0; }
+.list-plain li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.list-plain li:last-child { border-bottom: 0; }
+
+/* ------------------------------------------------------------------
+   Marketplace: product cards with the tier ladder
+------------------------------------------------------------------ */
+.products { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 18px; }
+.product {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 18px; display: flex; flex-direction: column; gap: 12px;
+}
+.product.oos { opacity: .7; }
+.p-top { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; }
+.p-cat { color: var(--muted); }
+.p-stock { font-weight: 600; }
+.p-stock.ok { color: var(--ok); } .p-stock.low { color: var(--warn); } .p-stock.out { color: var(--bad); }
+.product h3 { font-size: 17.5px; font-weight: 700; }
+.p-supplier { font-size: 13px; color: var(--muted); margin-top: 3px; }
+.p-supplier .star { color: var(--haldi); }
+
+.ladder { display: flex; gap: 4px; }
+.rung {
+  flex: 1; padding: 8px 8px 7px; border-radius: var(--radius-sm);
+  background: #F3F5F9; border: 1px solid transparent; position: relative;
+  transition: background .15s, border-color .15s;
+}
+.rung .r-range { display: block; font-size: 12px; color: var(--muted); }
+.rung .r-price { display: block; font-weight: 600; font-size: 14.5px; }
+.rung.active { background: var(--haldi-soft); border-color: var(--haldi); }
+.rung.active::after {
+  content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: var(--haldi); border-bottom: 0;
+}
+.buy-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; }
+.stepper { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; }
+.stepper button { width: 34px; border: 0; background: #F6F7FA; cursor: pointer; font-size: 17px; font-weight: 600; }
+.stepper button:hover { background: #ECEFF4; }
+.stepper input { width: 64px; border: 0; text-align: center; padding: 7px 4px; -moz-appearance: textfield; }
+.stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.line-total { text-align: right; }
+.line-total strong { font-family: var(--display); font-size: 19px; display: block; }
+.line-total small { color: var(--muted); font-size: 12.5px; }
+.nudge { font-size: 13px; margin: 0; color: var(--ink-2); background: #F3F5F9; border-radius: var(--radius-sm); padding: 7px 10px; min-height: 34px; }
+.nudge.best { color: var(--ok); background: var(--ok-soft); }
+.product > .btn.primary { margin-top: auto; }
+
+/* ------------------------------------------------------------------
+   Drawers, modal, toasts
+------------------------------------------------------------------ */
+.scrim { position: fixed; inset: 0; background: rgba(21, 32, 59, .38); z-index: 40; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.scrim.open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; top: 0; right: 0; height: 100%; width: min(600px, 100%);
+  background: var(--surface); z-index: 50; display: flex; flex-direction: column;
+  transform: translateX(100%); visibility: hidden;
+  transition: transform .25s ease, visibility 0s linear .25s;
+}
+.drawer.open { transform: none; visibility: visible; box-shadow: -12px 0 40px rgba(21, 32, 59, .18); transition: transform .25s ease; }
+.drawer th, .drawer td { padding: 9px 10px; }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+.drawer-head h2 { font-size: 20px; }
+.drawer-body { padding: 18px 22px; overflow-y: auto; flex: 1; }
+.drawer-foot { padding: 16px 22px; border-top: 1px solid var(--line); background: #FAFBFD; }
+.icon-btn { border: 0; background: transparent; cursor: pointer; padding: 6px; border-radius: var(--radius-sm); }
+.icon-btn:hover { background: #F0F2F6; }
+.icon-btn svg { width: 20px; height: 20px; display: block; }
+
+.cart-line { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.cart-line h3 { font-size: 15px; font-family: var(--body); font-weight: 600; }
+.cart-line h3 .sub { font-weight: 400; }
+.cart-line .row2 { grid-column: span 2; display: flex; justify-content: space-between; align-items: center; }
+.sum-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; }
+.sum-row.total { font-size: 17px; font-weight: 700; padding-top: 8px; }
+.sum-row .save { color: var(--ok); }
+.warn-box { margin: 12px 0 0; padding: 10px 12px; border-radius: var(--radius-sm); font-size: 13.5px; background: var(--bad-soft); color: var(--bad); }
+
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+.detail-grid div { background: #F6F7FA; border-radius: var(--radius); padding: 10px 12px; }
+.detail-grid span { display: block; font-size: 12.5px; color: var(--muted); }
+.detail-grid strong { font-size: 16px; }
+.section-title { font-size: 15px; font-family: var(--body); font-weight: 600; margin: 20px 0 8px; }
+.pay-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+.pay-form .full { grid-column: span 2; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.modal {
+  position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 20px;
+  background: rgba(21, 32, 59, .45); opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.modal.open { opacity: 1; pointer-events: auto; }
+.modal-card { background: var(--surface); border-radius: var(--radius-lg); width: min(860px, 100%); max-height: 86vh; display: flex; flex-direction: column; }
+.sql-block { position: relative; margin: 0 0 14px; }
+.sql-block pre {
+  margin: 0; background: var(--ink); color: #E4E9F7; border-radius: var(--radius);
+  padding: 14px 16px; font-size: 13px; line-height: 1.55; overflow-x: auto;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+.sql-block .copy { position: absolute; top: 8px; right: 8px; background: var(--ink-2); color: #fff; border-color: var(--ink-2); }
+.sql-caption { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+
+.toasts { position: fixed; left: 20px; bottom: 20px; z-index: 70; display: flex; flex-direction: column; gap: 10px; max-width: min(420px, calc(100% - 40px)); }
+.toast {
+  background: var(--ink); color: #fff; border-radius: var(--radius); padding: 12px 14px;
+  box-shadow: 0 10px 30px rgba(21, 32, 59, .25); font-size: 14px; border-left: 4px solid var(--haldi);
+  animation: toast-in .2s ease;
+}
+.toast.ok { border-left-color: #4CC38A; }
+.toast.bad { border-left-color: #F26B5B; }
+.toast .t-title { font-weight: 600; display: block; }
+@keyframes toast-in { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.empty, .loading, .error-box { padding: 40px; text-align: center; color: var(--muted); background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius-lg); }
+.error-box { color: var(--bad); border-color: #F1C3BE; background: var(--bad-soft); text-align: left; }
+.error-box code { background: #fff; padding: 2px 6px; border-radius: 4px; }
+.change-pos { color: var(--ok); font-weight: 600; }
+.change-neg { color: var(--bad); font-weight: 600; }
+
+/* ------------------------------------------------------------------
+   Responsive
+------------------------------------------------------------------ */
+@media (max-width: 1100px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .span-8, .span-4, .span-6 { grid-column: span 12; }
+}
+@media (max-width: 860px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { position: static; height: auto; padding: 14px; min-width: 0; }
+  .brand { padding-bottom: 12px; }
+  .nav { flex-direction: row; overflow-x: auto; }
+  .nav a { white-space: nowrap; }
+  .sidebar-foot { display: none; }
+  .topbar { padding: 14px 16px; position: static; }
+  .content { padding: 20px 16px 48px; }
+  .buyer-box { width: 100%; }
+  .buyer-box select { min-width: 0; flex: 1; }
+  .search { min-width: 0; width: 100%; }
+}
+@media (max-width: 520px) {
+  .kpis { grid-template-columns: 1fr; }
+  .detail-grid, .pay-form { grid-template-columns: 1fr; }
+  .pay-form .full { grid-column: span 1; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 2C25 9.5 25 22.5 16 30C7 22.5 7 9.5 16 2Z" fill="#E2A33A"/>
+        <path d="M16 6.5C21.6 11.8 21.6 20.2 16 25.5C10.4 20.2 10.4 11.8 16 6.5Z" fill="#15203B"/>
+        <circle cx="16" cy="16" r="3.6" fill="#B3261E"/>
+        <circle cx="17.2" cy="14.8" r="1" fill="#FBF0DC"/>
+      </svg>
+      <div>
+        <div class="brand-name">Trinetra</div>
+        <div class="brand-tag">Wholesale buying, clearly seen</div>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Main">
+      <a href="#overview" data-page="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3zM13 21h8v-8h-8zM13 3v6h8V3zM3 21h8v-4H3z"/></svg>
+        Overview</a>
+      <a href="#market" data-page="market">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l1.5-5h15L21 9M3 9h18v11H3zM9 13h6"/></svg>
+        Marketplace</a>
+      <a href="#orders" data-page="orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3h10l2 3v15H5V6zM9 11h6M9 15h6"/></svg>
+        Orders</a>
+      <a href="#buyers" data-page="buyers">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21V8l9-5 9 5v13M9 21v-6h6v6"/></svg>
+        Buyers and credit</a>
+      <a href="#suppliers" data-page="suppliers">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17h13V6H2zM15 10h4l3 3v4h-7M6 20a2 2 0 100-4 2 2 0 000 4zM18 20a2 2 0 100-4 2 2 0 000 4z"/></svg>
+        Suppliers</a>
+      <a href="#stock" data-page="stock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg>
+        Stock ledger</a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="conn" id="conn"><span class="conn-dot"></span><span id="conn-text">Connecting to MySQL</span></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <h1 id="page-title">Overview</h1>
+      <div class="buyer-box">
+        <label for="buyer-select">Buying as</label>
+        <select id="buyer-select"></select>
+      </div>
+      <span class="credit-pill" id="credit-pill"></span>
+      <button class="btn" data-action="show-sql" title="See the SQL this page ran">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+        View SQL</button>
+      <button class="btn dark cart-btn" data-action="open-cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h2l2.4 11h11L21 7H6M9 20a1 1 0 100-2 1 1 0 000 2zM18 20a1 1 0 100-2 1 1 0 000 2z"/></svg>
+        Cart <span class="cart-count" id="cart-count">0</span></button>
+    </header>
+
+    <main class="content" id="content" tabindex="-1"></main>
+  </div>
+</div>
+
+<!-- Cart drawer -->
+<div class="scrim" id="scrim" data-action="close-drawers"></div>
+<aside class="drawer" id="cart-drawer" aria-label="Cart" aria-hidden="true">
+  <div class="drawer-head">
+    <h2>Cart</h2>
+    <button class="icon-btn" data-action="close-drawers" aria-label="Close cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="drawer-body" id="cart-body"></div>
+  <div class="drawer-foot" id="cart-foot"></div>
+</aside>
+
+<!-- Order detail drawer -->
+<aside class="drawer" id="order-drawer" aria-label="Order details" aria-hidden="true">
+  <div class="drawer-head">
+    <h2 id="order-title">Order</h2>
+    <button class="icon-btn" data-action="close-drawers" aria-label="Close order details">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="drawer-body" id="order-body"></div>
+</aside>
+
+<!-- SQL modal -->
+<div class="modal" id="sql-modal" data-action="close-modal">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="sql-title">
+    <div class="drawer-head">
+      <h2 id="sql-title">SQL behind this page</h2>
+      <button class="icon-btn" data-action="close-modal" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="drawer-body" id="sql-body"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+// =====================================================================
+//  Trinetra frontend
+//  Plain JavaScript: fetch() calls the Express API, results are drawn
+//  with template strings. No framework, so every line is explainable.
+// =====================================================================
+
+// ---------- Small helpers ----------
+const $ = (sel, el = document) => el.querySelector(sel);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const inrFmt = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
+const inrFmt2 = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 });
+const inr = (n) => inrFmt.format(n || 0);
+const inrExact = (n) => (Number.isInteger(n) ? inrFmt : inrFmt2).format(n || 0);
+const num = (n) => new Intl.NumberFormat('en-IN').format(n || 0);
+
+// Indian short form: lakh and crore
+function short(n) {
+  n = n || 0;
+  if (n >= 1e7) return '₹' + (n / 1e7).toFixed(2) + ' Cr';
+  if (n >= 1e5) return '₹' + (n / 1e5).toFixed(2) + ' L';
+  return inr(n);
+}
+function fmtDate(s) {
+  const d = new Date(String(s).replace(' ', 'T'));
+  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+function fmtDateTime(s) {
+  const d = new Date(String(s).replace(' ', 'T'));
+  return d.toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+
+// ---------- App state ----------
+const state = {
+  page: 'overview',
+  buyers: [],
+  products: [],
+  tiers: {},              // product_id -> [tiers]
+  draft: {},              // product_id -> quantity typed on the card
+  cart: new Map(),        // product_id -> quantity
+  buyerId: null,
+  sql: {},                // page -> SQL statements it ran
+  lastAction: null,       // SQL of the most recent write (CALL ...)
+  orderFilter: 'All',
+  market: { cat: 'All', q: '' }
+};
+
+// ---------- API ----------
+async function api(path, options = {}) {
+  let res;
+  try {
+    res = await fetch(path, { headers: { 'Content-Type': 'application/json' }, ...options });
+  } catch {
+    throw new Error('Cannot reach the Trinetra server. Start it with "npm start" and reload this page.');
+  }
+  const body = await res.json().catch(() => ({ error: 'The server sent an unreadable response.' }));
+  if (!res.ok) {
+    const err = new Error(body.error || 'Request failed');
+    err.sql = body.sql;
+    throw err;
+  }
+  return body;
+}
+const post = (path, data) => api(path, { method: 'POST', body: JSON.stringify(data || {}) });
+
+// ---------- Toasts ----------
+function toast(title, message = '', type = '') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `<span class="t-title">${esc(title)}</span>${message ? esc(message) : ''}`;
+  $('#toasts').appendChild(el);
+  setTimeout(() => el.remove(), type === 'bad' ? 9000 : 5000);
+}
+
+// =====================================================================
+//  Routing between pages (uses the # part of the URL)
+// =====================================================================
+const PAGES = {
+  overview:  { title: 'Overview',          render: renderOverview },
+  market:    { title: 'Marketplace',       render: renderMarket },
+  orders:    { title: 'Orders',            render: renderOrders },
+  buyers:    { title: 'Buyers and credit', render: renderBuyers },
+  suppliers: { title: 'Suppliers',         render: renderSuppliers },
+  stock:     { title: 'Stock ledger',      render: renderStock }
+};
+
+async function go(page) {
+  if (!PAGES[page]) page = 'overview';
+  state.page = page;
+  closeDrawers();
+  $('#sql-modal').classList.remove('open');
+  document.querySelectorAll('.nav a').forEach((a) => {
+    if (a.dataset.page === page) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  $('#page-title').textContent = PAGES[page].title;
+  document.title = PAGES[page].title + ' | Trinetra';
+  $('#content').innerHTML = '<div class="loading">Loading from the database</div>';
+  try {
+    await PAGES[page].render();
+  } catch (e) {
+    $('#content').innerHTML = `<div class="error-box"><strong>Could not load this page.</strong><br>${esc(e.message)}</div>`;
+  }
+}
+window.addEventListener('hashchange', () => go(location.hash.slice(1)));
+
+// =====================================================================
+//  Buyers (top bar selector + credit pill)
+// =====================================================================
+async function loadBuyers() {
+  const body = await api('/api/buyers');
+  state.buyers = body.data;
+  state.sql.buyers = body.sql;
+  if (!state.buyerId && state.buyers.length) state.buyerId = state.buyers[0].buyer_id;
+  const sel = $('#buyer-select');
+  sel.innerHTML = state.buyers.map((b) =>
+    `<option value="${b.buyer_id}" ${b.buyer_id === state.buyerId ? 'selected' : ''}>${esc(b.company_name)}</option>`).join('');
+  updateCreditPill();
+}
+function currentBuyer() { return state.buyers.find((b) => b.buyer_id === state.buyerId); }
+function updateCreditPill() {
+  const b = currentBuyer();
+  $('#credit-pill').innerHTML = b
+    ? `Available credit <strong>${inr(b.available_credit)}</strong> of ${short(b.credit_limit)}`
+    : '';
+}
+$('#buyer-select').addEventListener('change', (e) => {
+  state.buyerId = Number(e.target.value);
+  updateCreditPill();
+  renderCart();
+});
+
+// =====================================================================
+//  Overview page
+// =====================================================================
+async function renderOverview() {
+  const body = await api('/api/dashboard');
+  state.sql.overview = body.sql;
+  const d = body.data;
+  const maxCat = Math.max(1, ...d.categories.map((c) => c.revenue));
+
+  $('#content').innerHTML = `
+    <section class="kpis">
+      <div class="kpi accent">
+        <div class="k-label">Gross sales</div>
+        <div class="k-value">${short(d.kpi.gross_sales)}</div>
+        <div class="k-note">${num(d.kpi.orders)} orders, cancellations excluded</div>
+      </div>
+      <div class="kpi">
+        <div class="k-label">Receivables</div>
+        <div class="k-value">${short(d.kpi.receivables)}</div>
+        <div class="k-note">Bought on credit, not yet paid</div>
+      </div>
+      <div class="kpi">
+        <div class="k-label">Buyer savings</div>
+        <div class="k-value">${short(d.kpi.buyer_savings)}</div>
+        <div class="k-note">Saved through volume price slabs</div>
+      </div>
+      <div class="kpi">
+        <div class="k-label">Needs restock</div>
+        <div class="k-value">${num(d.kpi.low_stock)}</div>
+        <div class="k-note">Products at or below reorder level</div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="panel span-8">
+        <header><h2>Monthly sales</h2><p>Approved and fulfilled orders</p></header>
+        ${barChart(d.monthly)}
+      </section>
+
+      <section class="panel span-4">
+        <header><h2>Supplier ranking</h2><p>By revenue</p></header>
+        <ol class="rank">
+          ${d.suppliers.map((s) => `
+            <li><span class="pos">${s.sales_rank}</span>
+                <span>${esc(s.company_name)}<span class="sub">${num(s.units_sold)} units sold</span></span>
+                <strong>${short(s.revenue)}</strong></li>`).join('')}
+        </ol>
+      </section>
+
+      <section class="panel span-4">
+        <header><h2>Sales by category</h2></header>
+        ${d.categories.map((c) => `
+          <div class="hbar"><span>${esc(c.category_name)}</span><strong>${short(c.revenue)}</strong>
+            <div class="meter"><span style="width:${(c.revenue / maxCat) * 100}%"></span></div></div>`).join('')}
+      </section>
+
+      <section class="panel span-4">
+        <header><h2>Buyers above ₹1 lakh</h2></header>
+        <ul class="list-plain">
+          ${d.topBuyers.map((b) => `<li><span>${esc(b.company_name)}<span class="sub">${b.orders} orders</span></span><strong>${short(b.spend)}</strong></li>`).join('')
+            || '<li>No buyer has crossed ₹1 lakh yet.</li>'}
+        </ul>
+      </section>
+
+      <section class="panel span-4">
+        <header><h2>Needs restock</h2><p><a href="#stock">Open stock ledger</a></p></header>
+        <ul class="list-plain">
+          ${d.lowStock.map((p) => `<li><span>${esc(p.product_name)}<span class="sub">${esc(p.supplier_name)}</span></span>
+              <span class="${p.stock_quantity === 0 ? 'change-neg' : ''}">${num(p.stock_quantity)} left</span></li>`).join('')
+            || '<li>Every product is above its reorder level.</li>'}
+        </ul>
+      </section>
+    </div>`;
+}
+
+// SVG bar chart drawn by hand (no chart library needed, works offline)
+function barChart(rows) {
+  if (!rows.length) return '<div class="empty">No orders yet.</div>';
+  const W = 700, H = 260, padX = 20, top = 30, bottom = 36;
+  const max = Math.max(...rows.map((r) => r.revenue));
+  const step = (W - padX * 2) / rows.length;
+  const bw = Math.min(64, step * 0.58);
+  const bars = rows.map((r, i) => {
+    const h = (r.revenue / max) * (H - top - bottom);
+    const cx = padX + step * i + step / 2;
+    const y = H - bottom - h;
+    const label = new Date(r.month + '-01T00:00').toLocaleDateString('en-IN', { month: 'short', year: '2-digit' });
+    return `<rect class="bar ${i === rows.length - 1 ? 'last' : ''}" x="${cx - bw / 2}" y="${y}" width="${bw}" height="${h}" rx="5">
+              <title>${label}: ${inr(r.revenue)} from ${r.orders} orders</title></rect>
+            <text class="bar-val" x="${cx}" y="${y - 8}">${short(r.revenue)}</text>
+            <text class="bar-label" x="${cx}" y="${H - 12}">${label}</text>`;
+  }).join('');
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly sales bar chart">
+            <line class="axis" x1="${padX}" x2="${W - padX}" y1="${H - bottom}" y2="${H - bottom}"/>${bars}</svg>`;
+}
+
+// =====================================================================
+//  Marketplace page
+// =====================================================================
+async function loadProducts() {
+  const body = await api('/api/products');
+  state.products = body.data.products;
+  state.tiers = {};
+  body.data.tiers.forEach((t) => (state.tiers[t.product_id] ||= []).push(t));
+  state.sql.market = body.sql;
+}
+const productById = (id) => state.products.find((p) => p.product_id === id);
+
+// Same rule as fn_get_tier_price in MySQL, used here only for the live preview.
+// The final price is always decided by the database when the order is placed.
+function tierFor(pid, qty) {
+  return (state.tiers[pid] || []).find((t) =>
+    qty >= t.min_quantity && (t.max_quantity === null || qty <= t.max_quantity));
+}
+function unitPrice(pid, qty) {
+  const t = tierFor(pid, qty);
+  return t ? t.discounted_unit_price : productById(pid).base_unit_price;
+}
+function nextTier(pid, qty) {
+  return (state.tiers[pid] || []).find((t) => t.min_quantity > qty);
+}
+
+async function renderMarket() {
+  await loadProducts();
+  const cats = ['All', ...new Set(state.products.map((p) => p.category_name))];
+  $('#content').innerHTML = `
+    <div class="toolbar">
+      <div class="chips" role="group" aria-label="Filter by category">
+        ${cats.map((c) => `<button class="chip" data-action="market-cat" data-cat="${esc(c)}" aria-pressed="${state.market.cat === c}">${esc(c)}</button>`).join('')}
+      </div>
+      <span class="spacer"></span>
+      <input class="search" id="market-search" type="search" placeholder="Search product, SKU or supplier" value="${esc(state.market.q)}" aria-label="Search products">
+    </div>
+    <div class="products" id="product-grid"></div>`;
+  $('#market-search').addEventListener('input', (e) => { state.market.q = e.target.value; drawProducts(); });
+  drawProducts();
+}
+
+function drawProducts() {
+  const q = state.market.q.trim().toLowerCase();
+  const list = state.products.filter((p) =>
+    (state.market.cat === 'All' || p.category_name === state.market.cat) &&
+    (!q || [p.product_name, p.sku, p.supplier_name].some((v) => v.toLowerCase().includes(q))));
+  $('#product-grid').innerHTML = list.map(productCard).join('')
+    || '<div class="empty">No products match this search. Try another name or clear the filter.</div>';
+}
+
+function productCard(p) {
+  const qty = state.draft[p.product_id] || 1;
+  const out = p.stock_quantity === 0;
+  const stockCls = out ? 'out' : p.stock_status === 'Low stock' ? 'low' : 'ok';
+  const stockText = out ? 'Out of stock' : `${num(p.stock_quantity)} ${esc(p.unit)}s in stock`;
+  return `
+    <article class="product ${out ? 'oos' : ''}" data-pid="${p.product_id}">
+      <div class="p-top"><span class="p-cat">${esc(p.category_name)}</span><span class="p-stock ${stockCls}">${stockText}</span></div>
+      <div>
+        <h3>${esc(p.product_name)}</h3>
+        <div class="p-supplier">${esc(p.supplier_name)}, ${esc(p.supplier_city)} <span class="star" aria-hidden="true">★</span> ${p.supplier_rating.toFixed(1)} <span class="sub">SKU ${esc(p.sku)}</span></div>
+      </div>
+      <div class="ladder" role="list" aria-label="Price per ${esc(p.unit)} by quantity">
+        ${(state.tiers[p.product_id] || []).map((t) => `
+          <div class="rung" role="listitem" data-tier="${t.tier_id}">
+            <span class="r-range">${t.max_quantity === null ? `${num(t.min_quantity)}+` : `${num(t.min_quantity)}–${num(t.max_quantity)}`}</span>
+            <span class="r-price">${inr(t.discounted_unit_price)}</span>
+          </div>`).join('')}
+      </div>
+      <div class="buy-row">
+        <div class="stepper">
+          <button type="button" data-action="qty-step" data-pid="${p.product_id}" data-step="-1" aria-label="Decrease quantity" ${out ? 'disabled' : ''}>−</button>
+          <input type="number" min="1" value="${qty}" data-qty-input="${p.product_id}" aria-label="Quantity" ${out ? 'disabled' : ''}>
+          <button type="button" data-action="qty-step" data-pid="${p.product_id}" data-step="1" aria-label="Increase quantity" ${out ? 'disabled' : ''}>+</button>
+        </div>
+        <div class="line-total"><strong data-total></strong><small data-unit></small></div>
+      </div>
+      <p class="nudge" data-nudge></p>
+      <button class="btn primary" data-action="add-to-cart" data-pid="${p.product_id}" ${out ? 'disabled' : ''}>Add to cart</button>
+    </article>`;
+}
+
+// Refresh one card after its quantity changes
+function updateCard(pid) {
+  const card = document.querySelector(`.product[data-pid="${pid}"]`);
+  if (!card) return;
+  const p = productById(pid);
+  const qty = state.draft[pid] || 1;
+  const price = unitPrice(pid, qty);
+  const active = tierFor(pid, qty);
+  card.querySelectorAll('.rung').forEach((r) =>
+    r.classList.toggle('active', !!active && Number(r.dataset.tier) === active.tier_id));
+  card.querySelector('[data-total]').textContent = inr(price * qty);
+  card.querySelector('[data-unit]').textContent = `${inrExact(price)} per ${p.unit}`;
+  const nudge = card.querySelector('[data-nudge]');
+  const next = nextTier(pid, qty);
+  if (p.stock_quantity === 0) {
+    nudge.className = 'nudge'; nudge.textContent = 'Restock expected from the supplier soon.';
+  } else if (next) {
+    const more = next.min_quantity - qty;
+    const save = (price - next.discounted_unit_price) * next.min_quantity;
+    nudge.className = 'nudge';
+    nudge.textContent = `Add ${num(more)} more to pay ${inr(next.discounted_unit_price)} per ${p.unit} and save ${inr(save)}.`;
+  } else {
+    nudge.className = 'nudge best';
+    nudge.textContent = `Best price unlocked. You save ${inr((p.base_unit_price - price) * qty)} on this quantity.`;
+  }
+}
+
+// =====================================================================
+//  Cart
+// =====================================================================
+function cartTotals() {
+  let total = 0, base = 0;
+  for (const [pid, qty] of state.cart) {
+    const p = productById(pid);
+    if (!p) continue;
+    total += unitPrice(pid, qty) * qty;
+    base += p.base_unit_price * qty;
+  }
+  return { total, savings: base - total };
+}
+
+function renderCart() {
+  $('#cart-count').textContent = state.cart.size;
+  const body = $('#cart-body'), foot = $('#cart-foot');
+  if (!state.cart.size) {
+    body.innerHTML = '<div class="empty">Your cart is empty. Add products from the marketplace to start an order.</div>';
+    foot.innerHTML = `<button class="btn" data-action="goto-market" style="width:100%">Browse the marketplace</button>`;
+    return;
+  }
+  body.innerHTML = [...state.cart].map(([pid, qty]) => {
+    const p = productById(pid);
+    const price = unitPrice(pid, qty);
+    return `
+      <div class="cart-line">
+        <h3>${esc(p.product_name)}<span class="sub">${esc(p.supplier_name)}</span></h3>
+        <button class="icon-btn" data-action="cart-remove" data-pid="${pid}" aria-label="Remove ${esc(p.product_name)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+        <div class="row2">
+          <div class="stepper">
+            <button type="button" data-action="cart-step" data-pid="${pid}" data-step="-1" aria-label="Decrease">−</button>
+            <input type="number" min="1" value="${qty}" data-cart-input="${pid}" aria-label="Quantity">
+            <button type="button" data-action="cart-step" data-pid="${pid}" data-step="1" aria-label="Increase">+</button>
+          </div>
+          <div class="line-total"><strong>${inr(price * qty)}</strong><small>${inrExact(price)} per ${esc(p.unit)}</small></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const { total, savings } = cartTotals();
+  const b = currentBuyer();
+  const after = b ? b.available_credit - total : 0;
+  foot.innerHTML = `
+    <div class="sum-row"><span>Saved with volume pricing</span><span class="save">${inr(savings)}</span></div>
+    <div class="sum-row"><span>Credit after this order</span><span>${inr(after)}</span></div>
+    <div class="sum-row total"><span>Order total</span><span>${inr(total)}</span></div>
+    ${b && after < 0 ? `<p class="warn-box">This total is more than ${esc(b.company_name)}'s available credit. MySQL will reject the order and roll everything back.</p>` : ''}
+    <button class="btn primary" data-action="place-order" style="width:100%;margin-top:12px">Place order for ${b ? esc(b.company_name) : 'buyer'}</button>`;
+}
+
+function setCartQty(pid, qty) {
+  qty = Math.max(1, Math.floor(Number(qty) || 1));
+  state.cart.set(pid, qty);
+  renderCart();
+}
+
+async function placeOrder() {
+  const items = [...state.cart].map(([product_id, qty]) => ({ product_id, qty }));
+  const btn = document.querySelector('[data-action="place-order"]');
+  if (btn) { btn.disabled = true; btn.textContent = 'Placing order'; }
+  try {
+    const r = await post('/api/orders', { buyer_id: state.buyerId, items });
+    state.lastAction = r.sql; state.lastActionFailed = false;
+    toast(`Order #${r.data.order_id} approved`, `${inr(r.data.total_amount)} billed. Credit left: ${inr(r.data.credit_remaining)}.`, 'ok');
+    state.cart.clear();
+    renderCart();
+    closeDrawers();
+    await loadBuyers();
+    if (state.page === 'market' || state.page === 'overview') await go(state.page);
+  } catch (e) {
+    state.lastAction = e.sql || null; state.lastActionFailed = true;
+    toast('Order rejected by the database', e.message, 'bad');
+    renderCart();
+  }
+}
+
+// =====================================================================
+//  Orders page and order detail
+// =====================================================================
+const statusBadge = (s) => `<span class="badge b-${s.toLowerCase()}">${esc(s)}</span>`;
+function payBadge(s) {
+  const cls = { 'Paid': 'paid', 'Partially paid': 'partial', 'Unpaid': 'unpaid' }[s] || 'na';
+  return `<span class="badge b-${cls}">${esc(s)}</span>`;
+}
+
+async function renderOrders() {
+  const body = await api('/api/orders');
+  state.sql.orders = body.sql;
+  const filters = ['All', 'Approved', 'Fulfilled', 'Cancelled'];
+  const rows = body.data.filter((o) => state.orderFilter === 'All' || o.status === state.orderFilter);
+  $('#content').innerHTML = `
+    <div class="toolbar">
+      <div class="chips" role="group" aria-label="Filter by status">
+        ${filters.map((f) => `<button class="chip" data-action="order-filter" data-filter="${f}" aria-pressed="${state.orderFilter === f}">${f}</button>`).join('')}
+      </div>
+      <span class="spacer"></span>
+      <span class="sub">${rows.length} orders. Select an order to record a payment, fulfil or cancel it.</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Order</th><th>Date</th><th>Buyer</th><th class="num">Lines</th><th class="num">Total</th>
+          <th class="num">Paid</th><th class="num">Outstanding</th><th>Payment</th><th>Status</th></tr></thead>
+        <tbody>
+          ${rows.map((o) => `
+            <tr class="clickable" data-action="open-order" data-id="${o.order_id}" tabindex="0">
+              <td><strong>#${o.order_id}</strong></td>
+              <td>${fmtDate(o.order_date)}</td>
+              <td>${esc(o.buyer_name)}</td>
+              <td class="num">${o.line_items}</td>
+              <td class="num">${inr(o.total_amount)}</td>
+              <td class="num">${inr(o.amount_paid)}</td>
+              <td class="num">${inr(o.outstanding)}</td>
+              <td>${payBadge(o.payment_status)}</td>
+              <td>${statusBadge(o.status)}</td>
+            </tr>`).join('') || '<tr><td colspan="9">No orders with this status.</td></tr>'}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+async function openOrder(id) {
+  openDrawer('#order-drawer');
+  $('#order-title').textContent = `Order #${id}`;
+  $('#order-body').innerHTML = '<div class="loading">Loading order</div>';
+  try {
+    const body = await api(`/api/orders/${id}`);
+    state.sql.orderDetail = body.sql;
+    const { order: o, items, payments } = body.data;
+    const savings = items.reduce((s, i) => s + (i.base_unit_price - i.applied_unit_price) * i.quantity, 0);
+    const canPay = o.status !== 'Cancelled' && o.outstanding > 0;
+
+    $('#order-body').innerHTML = `
+      <p style="margin:0 0 14px">${statusBadge(o.status)} ${payBadge(o.payment_status)}
+        <span class="sub" style="margin-top:6px">${esc(o.buyer_name)}, placed ${fmtDateTime(o.order_date)}</span></p>
+      <div class="detail-grid">
+        <div><span>Order total</span><strong>${inr(o.total_amount)}</strong></div>
+        <div><span>Outstanding</span><strong>${inr(o.outstanding)}</strong></div>
+        <div><span>Paid so far</span><strong>${inr(o.amount_paid)}</strong></div>
+        <div><span>Saved by tier pricing</span><strong>${inr(savings)}</strong></div>
+      </div>
+
+      <h3 class="section-title">Items</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Unit price</th><th class="num">Subtotal</th></tr></thead>
+        <tbody>${items.map((i) => `
+          <tr><td>${esc(i.product_name)}<span class="sub">List price ${inrExact(i.base_unit_price)}</span></td>
+              <td class="num">${num(i.quantity)}</td><td class="num">${inrExact(i.applied_unit_price)}</td>
+              <td class="num">${inr(i.subtotal)}</td></tr>`).join('')}</tbody>
+      </table></div>
+
+      <h3 class="section-title">Payments</h3>
+      ${payments.length ? `<ul class="list-plain">${payments.map((p) => `
+          <li><span>${esc(p.payment_mode)} <span class="sub">${esc(p.reference_no || 'No reference')}, ${fmtDate(p.paid_at)}</span></span>
+              <strong>${inr(p.amount)}</strong></li>`).join('')}</ul>`
+        : '<p class="sub">No payments recorded yet.</p>'}
+
+      ${canPay ? `
+        <h3 class="section-title">Record a payment</h3>
+        <form class="pay-form" data-pay-form="${o.order_id}">
+          <label class="field">Amount (₹)<input name="amount" type="number" min="1" step="0.01" value="${o.outstanding}" required></label>
+          <label class="field">Mode<select name="mode"><option>NEFT</option><option>RTGS</option><option>UPI</option><option>Cheque</option></select></label>
+          <label class="field full">Reference number<input name="reference" placeholder="UTR or cheque number"></label>
+          <button class="btn primary full" type="submit">Record payment</button>
+        </form>` : ''}
+
+      ${o.status === 'Approved' ? `
+        <h3 class="section-title">Order actions</h3>
+        <div class="actions">
+          <button class="btn dark" data-action="fulfil-order" data-id="${o.order_id}">Mark as fulfilled</button>
+          <button class="btn ghost-bad" data-action="cancel-order" data-id="${o.order_id}">Cancel order</button>
+        </div>
+        <p class="sub" style="margin-top:8px">Cancelling returns the stock and the credit. Orders with payments cannot be cancelled.</p>` : ''}`;
+  } catch (e) {
+    $('#order-body').innerHTML = `<div class="error-box">${esc(e.message)}</div>`;
+  }
+}
+
+async function orderAction(id, kind, payload) {
+  const labels = { pay: 'Payment recorded', fulfil: 'Order fulfilled', cancel: 'Order cancelled' };
+  try {
+    const r = await post(`/api/orders/${id}/${kind}`, payload);
+    state.lastAction = r.sql; state.lastActionFailed = false;
+    let detail = '';
+    if (kind === 'pay') detail = `${inr(r.data.amount_paid)} received. ${inr(r.data.still_outstanding)} still outstanding.`;
+    if (kind === 'cancel') detail = `${inr(r.data.credit_restored)} credit returned and stock restored.`;
+    toast(`${labels[kind]} for order #${id}`, detail, 'ok');
+    await loadBuyers();
+    await openOrder(id);
+    if (state.page === 'orders') await renderOrders();
+  } catch (e) {
+    state.lastAction = e.sql || null; state.lastActionFailed = true;
+    toast('The database refused this action', e.message, 'bad');
+  }
+}
+
+// =====================================================================
+//  Buyers page
+// =====================================================================
+async function renderBuyers() {
+  await loadBuyers();
+  $('#content').innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Buyer</th><th>GSTIN</th><th class="num">Credit limit</th><th class="num">Used</th>
+          <th class="num">Available</th><th>Utilisation</th><th class="num">Active orders</th><th></th></tr></thead>
+        <tbody>
+          ${state.buyers.map((b) => {
+            const cls = b.utilisation_pct >= 75 ? 'hot' : b.utilisation_pct >= 40 ? 'mid' : '';
+            return `<tr>
+              <td><strong>${esc(b.company_name)}</strong><span class="sub">${esc(b.city)}</span></td>
+              <td>${esc(b.gstin)}</td>
+              <td class="num">${inr(b.credit_limit)}</td>
+              <td class="num">${inr(b.credit_used)}</td>
+              <td class="num">${inr(b.available_credit)}</td>
+              <td><div class="meter ${cls}"><span style="width:${Math.min(100, b.utilisation_pct)}%"></span></div>
+                  <span class="sub">${b.utilisation_pct}% used</span></td>
+              <td class="num">${b.active_orders}</td>
+              <td><button class="btn small" data-action="buy-as" data-id="${b.buyer_id}">Shop as this buyer</button></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+// =====================================================================
+//  Suppliers page
+// =====================================================================
+async function renderSuppliers() {
+  const body = await api('/api/suppliers');
+  state.sql.suppliers = body.sql;
+  const max = Math.max(1, ...body.data.map((s) => s.revenue));
+  $('#content').innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Rank</th><th>Supplier</th><th>GSTIN</th><th class="num">Rating</th><th class="num">Products</th>
+          <th class="num">Units sold</th><th class="num">Revenue</th><th>Share of top seller</th></tr></thead>
+        <tbody>
+          ${body.data.map((s) => `
+            <tr>
+              <td><strong>${s.sales_rank}</strong></td>
+              <td><strong>${esc(s.company_name)}</strong><span class="sub">${esc(s.city)}, ${esc(s.email)}</span></td>
+              <td>${esc(s.gstin)}</td>
+              <td class="num">★ ${s.rating.toFixed(1)}</td>
+              <td class="num">${s.products_listed}</td>
+              <td class="num">${num(s.units_sold)}</td>
+              <td class="num">${inr(s.revenue)}</td>
+              <td><div class="meter"><span style="width:${(s.revenue / max) * 100}%"></span></div></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+// =====================================================================
+//  Stock ledger page (rows written by triggers)
+// =====================================================================
+async function renderStock() {
+  const [ledger, dash] = await Promise.all([api('/api/stock-ledger'), api('/api/dashboard')]);
+  state.sql.stock = [ledger.sql, dash.sql[5]];
+  const low = dash.data.lowStock;
+  $('#content').innerHTML = `
+    <section class="panel" style="margin-bottom:18px">
+      <header><h2>Needs restock</h2><p>Stock at or below the reorder level</p></header>
+      ${low.length ? `<div class="table-wrap"><table>
+        <thead><tr><th>Product</th><th class="num">In stock</th><th class="num">Reorder level</th><th>Receive stock</th></tr></thead>
+        <tbody>${low.map((p) => `
+          <tr><td><strong>${esc(p.product_name)}</strong><span class="sub">${esc(p.supplier_name)}, SKU ${esc(p.sku)}</span></td>
+              <td class="num ${p.stock_quantity === 0 ? 'change-neg' : ''}">${num(p.stock_quantity)}</td>
+              <td class="num">${num(p.reorder_level)}</td>
+              <td><form class="actions" data-restock-form="${p.product_id}">
+                    <div class="stepper"><input name="qty" type="number" min="1" value="${Math.max(p.reorder_level * 2, 10)}" aria-label="Quantity to receive" style="width:90px"></div>
+                    <button class="btn small dark" type="submit">Receive stock</button></form></td></tr>`).join('')}
+        </tbody></table></div>` : '<p class="sub">Every product is above its reorder level.</p>'}
+    </section>
+
+    <section class="panel">
+      <header><h2>Stock movements</h2><p>Written automatically by database triggers, latest first</p></header>
+      <div class="table-wrap"><table>
+        <thead><tr><th>When</th><th>Product</th><th class="num">Before</th><th class="num">Change</th><th class="num">After</th><th>Reason</th></tr></thead>
+        <tbody>${ledger.data.map((l) => `
+          <tr><td>${fmtDateTime(l.changed_at)}</td>
+              <td>${esc(l.product_name)}<span class="sub">${esc(l.sku)}</span></td>
+              <td class="num">${num(l.old_quantity)}</td>
+              <td class="num ${l.change_qty >= 0 ? 'change-pos' : 'change-neg'}">${l.change_qty > 0 ? '+' : ''}${num(l.change_qty)}</td>
+              <td class="num">${num(l.new_quantity)}</td>
+              <td>${esc(l.reason)}</td></tr>`).join('')}
+        </tbody></table></div>
+    </section>`;
+}
+
+// =====================================================================
+//  Drawers and SQL modal
+// =====================================================================
+function openDrawer(sel) {
+  closeDrawers(true);
+  $(sel).classList.add('open');
+  $(sel).setAttribute('aria-hidden', 'false');
+  $('#scrim').classList.add('open');
+}
+function closeDrawers(keepScrim) {
+  document.querySelectorAll('.drawer').forEach((d) => { d.classList.remove('open'); d.setAttribute('aria-hidden', 'true'); });
+  if (!keepScrim) $('#scrim').classList.remove('open');
+}
+
+function showSql() {
+  const blocks = [];
+  if (state.lastAction) blocks.push({
+    caption: state.lastActionFailed
+      ? 'Last action you performed, rejected by MySQL and rolled back'
+      : 'Last action you performed (stored procedure call)',
+    sql: state.lastAction });
+  const pageSql = state.sql[state.page];
+  [].concat(pageSql || []).forEach((s, i) =>
+    blocks.push({ caption: i === 0 ? `Queries that loaded the ${PAGES[state.page].title} page` : '', sql: s }));
+  if ($('#order-drawer').classList.contains('open') && state.sql.orderDetail) {
+    [].concat(state.sql.orderDetail).forEach((s, i) => blocks.push({ caption: i === 0 ? 'Queries for the open order' : '', sql: s }));
+  }
+  $('#sql-body').innerHTML = blocks.length ? blocks.map((b, i) => `
+    ${b.caption ? `<p class="sql-caption">${esc(b.caption)}</p>` : ''}
+    <div class="sql-block"><pre id="sql-${i}">${esc(tidy(b.sql))}</pre>
+      <button class="btn small copy" data-action="copy-sql" data-target="sql-${i}">Copy</button></div>`).join('')
+    : '<p class="sub">This page has not run any SQL yet.</p>';
+  $('#sql-modal').classList.add('open');
+}
+// Remove the common indentation from multi-line SQL so it reads cleanly
+function tidy(sql) {
+  const lines = String(sql).replace(/^\n+|\s+$/g, '').split('\n');
+  const indents = lines.slice(1).filter((l) => l.trim()).map((l) => l.match(/^ */)[0].length);
+  const cut = indents.length ? Math.min(...indents) : 0;
+  return [lines[0].trim(), ...lines.slice(1).map((l) => l.slice(Math.min(cut, l.length - l.trimStart().length)))].join('\n');
+}
+
+// =====================================================================
+//  Event handling (one listener for all buttons, using data-action)
+// =====================================================================
+document.addEventListener('click', async (e) => {
+  const el = e.target.closest('[data-action]');
+  if (!el) return;
+  const action = el.dataset.action;
+  const pid = Number(el.dataset.pid);
+  const id = Number(el.dataset.id);
+
+  if ((action === 'close-modal') && e.target !== el) return; // clicks inside the card do not close it
+
+  switch (action) {
+    case 'market-cat':
+      state.market.cat = el.dataset.cat;
+      document.querySelectorAll('[data-action="market-cat"]').forEach((c) => c.setAttribute('aria-pressed', c === el));
+      drawProducts();
+      break;
+    case 'qty-step':
+      state.draft[pid] = Math.max(1, (state.draft[pid] || 1) + Number(el.dataset.step));
+      document.querySelector(`[data-qty-input="${pid}"]`).value = state.draft[pid];
+      updateCard(pid);
+      break;
+    case 'add-to-cart': {
+      const qty = state.draft[pid] || 1;
+      state.cart.set(pid, (state.cart.get(pid) || 0) + qty);
+      renderCart();
+      toast('Added to cart', `${num(qty)} × ${productById(pid).product_name}`);
+      break;
+    }
+    case 'open-cart': openDrawer('#cart-drawer'); renderCart(); break;
+    case 'close-drawers': closeDrawers(); break;
+    case 'cart-step': setCartQty(pid, state.cart.get(pid) + Number(el.dataset.step)); break;
+    case 'cart-remove': state.cart.delete(pid); renderCart(); break;
+    case 'goto-market': closeDrawers(); location.hash = 'market'; break;
+    case 'place-order': await placeOrder(); break;
+    case 'order-filter': state.orderFilter = el.dataset.filter; renderOrders(); break;
+    case 'open-order': openOrder(id); break;
+    case 'fulfil-order': orderAction(id, 'fulfil'); break;
+    case 'cancel-order':
+      if (confirm(`Cancel order #${id}? Stock and credit will be returned.`)) orderAction(id, 'cancel');
+      break;
+    case 'buy-as':
+      state.buyerId = id;
+      $('#buyer-select').value = id;
+      updateCreditPill();
+      location.hash = 'market';
+      break;
+    case 'show-sql': showSql(); break;
+    case 'close-modal': $('#sql-modal').classList.remove('open'); break;
+    case 'copy-sql':
+      navigator.clipboard?.writeText($('#' + el.dataset.target).textContent);
+      el.textContent = 'Copied';
+      setTimeout(() => (el.textContent = 'Copy'), 1500);
+      break;
+  }
+});
+
+// Typing a quantity directly
+document.addEventListener('input', (e) => {
+  if (e.target.dataset.qtyInput) {
+    const pid = Number(e.target.dataset.qtyInput);
+    state.draft[pid] = Math.max(1, Math.floor(Number(e.target.value) || 1));
+    updateCard(pid);
+  }
+});
+document.addEventListener('change', (e) => {
+  if (e.target.dataset.cartInput) setCartQty(Number(e.target.dataset.cartInput), e.target.value);
+});
+
+// Forms: record payment and receive stock
+document.addEventListener('submit', async (e) => {
+  const form = e.target;
+  if (form.dataset.payForm) {
+    e.preventDefault();
+    const f = new FormData(form);
+    orderAction(Number(form.dataset.payForm), 'pay',
+      { amount: Number(f.get('amount')), mode: f.get('mode'), reference: f.get('reference') });
+  }
+  if (form.dataset.restockForm) {
+    e.preventDefault();
+    const pid = Number(form.dataset.restockForm);
+    try {
+      const r = await post(`/api/products/${pid}/restock`, { qty: Number(new FormData(form).get('qty')) });
+      state.lastAction = r.sql; state.lastActionFailed = false;
+      toast('Stock received', `${r.data.product_name} now has ${num(r.data.new_stock)} in stock.`, 'ok');
+      renderStock();
+    } catch (err) {
+      state.lastAction = err.sql || null; state.lastActionFailed = true;
+      toast('The database refused this action', err.message, 'bad');
+    }
+  }
+});
+
+// Keyboard: Enter opens an order row, Escape closes overlays
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { closeDrawers(); $('#sql-modal').classList.remove('open'); }
+  if (e.key === 'Enter' && e.target.matches('tr[data-action="open-order"]')) openOrder(Number(e.target.dataset.id));
+});
+
+// Re-draw cards after they are rendered (fills price, totals, nudge)
+new MutationObserver(() => {
+  document.querySelectorAll('.product[data-pid]:not([data-ready])').forEach((card) => {
+    card.dataset.ready = '1';
+    updateCard(Number(card.dataset.pid));
+  });
+}).observe($('#content'), { childList: true, subtree: true });
+
+// =====================================================================
+//  Start
+// =====================================================================
+(async function init() {
+  try {
+    const h = await api('/api/health');
+    $('#conn').className = 'conn ok';
+    const engine = h.data.version.includes('MariaDB') ? 'MariaDB' : 'MySQL';
+    $('#conn-text').textContent = `${engine} ${h.data.version.split('-')[0]}, signed in as ${h.data.user.split('@')[0]}`;
+    await loadBuyers();
+    await loadProducts();   // cart needs product data on every page
+  } catch (e) {
+    $('#conn').className = 'conn bad';
+    $('#conn-text').textContent = 'Not connected';
+  }
+  renderCart();
+  go(location.hash.slice(1) || 'overview');
+})();
+</script>
+</body>
+</html>
